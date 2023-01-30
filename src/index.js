@@ -41,7 +41,7 @@ async function loadMoreImages(searchValue) {
   page += 1;
   const data = await getPhotos(searchValue, page);
   const totalPages = Math.ceil(Number(data.totalHits) / perPage);
-  console.log(totalPages);
+  // console.log(totalPages);
   if (page < totalPages) {
     createGalleryMarkup(data.hits);
     createLightbox();
@@ -58,7 +58,7 @@ async function mountData(searchValue) {
     ////
     page += 1;
     const totalPages = Math.ceil(Number(data.totalHits) / perPage);
-    console.log(totalPages);
+    // console.log(totalPages);
     if (page < totalPages) {
       removeClass('visually-hidden');
     }
@@ -127,7 +127,7 @@ function submitSearch(event) {
 
   searchValue = event.currentTarget[0].value;
 
-  console.log('searchValue', searchValue);
+  // console.log('searchValue', searchValue);
 
   mountData(searchValue);
 }
