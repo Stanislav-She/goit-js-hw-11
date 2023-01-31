@@ -41,14 +41,20 @@ async function loadMoreImages(searchValue) {
   page += 1;
   const data = await getPhotos(searchValue, page);
   const totalPages = Math.ceil(Number(data.totalHits) / perPage);
-  // console.log(totalPages);
-  if (page < totalPages) {
+  console.log(data);
+
+  if (page <= totalPages) {
     createGalleryMarkup(data.hits);
     createLightbox();
-  }
-  if (page > totalPages) {
+    const { height: cardHeight } = document
+      .querySelector('.gallery')
+      .firstElementChild.getBoundingClientRect();
+    window.scrollBy({
+      top: cardHeight * 1.5,
+      behavior: 'smooth',
+    });
+  } else if (page > totalPages) {
     addClass('visually-hidden');
-    console.log('after');
   }
 }
 
@@ -59,17 +65,15 @@ async function mountData(searchValue) {
     page += 1;
     const totalPages = Math.ceil(Number(data.totalHits) / perPage);
     // console.log(totalPages);
-    if (page < totalPages) {
+    if (page <= totalPages) {
       removeClass('visually-hidden');
-    }
-    if (page > totalPages) {
+    } else if (page > totalPages) {
       addClass('visually-hidden');
-      console.log('after');
     }
     ////
     refs.heroHidden.classList.add('visually-hidden');
 
-    refs.loadMore.removeEventListener('click', loadMoreClb);
+    // refs.loadMore.removeEventListener('click', loadMoreClb);
     refs.loadMore.addEventListener('click', loadMoreClb);
 
     if (data.hits.lenght === 0) {
@@ -106,8 +110,6 @@ function createLightbox() {
   });
 }
 
-///////////////////////////
-
 refs.input.addEventListener('input', clearInput);
 
 function clearInput() {
@@ -115,10 +117,9 @@ function clearInput() {
     clearMarkup(refs.gallery);
     addClass('visually-hidden');
     refs.heroHidden.classList.remove('visually-hidden');
+    page = 1;
   }
 }
-
-//////////////////////////
 
 function submitSearch(event) {
   event.preventDefault();
@@ -128,7 +129,7 @@ function submitSearch(event) {
   searchValue = event.currentTarget[0].value;
 
   // console.log('searchValue', searchValue);
-
+  page = 1;
   mountData(searchValue);
 }
 
